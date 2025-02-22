@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conspiracy Score Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>AI News Aggregator</h1>
+    <textarea id="headlineInput" placeholder="Enter a headline..."></textarea>
+    <button id="calculateBtn">Calculate Score</button>
+    <div id="result">
+      <p><strong>Score:</strong> <span id="score">-</span></p>
+      <p><strong>Category:</strong> <span id="category">-</span></p>
+    </div>
+
+    <h2>Headlines List</h2>
+    <table id="headlinesTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Headline</th>
+          <th>Score</th>
+          <th>Category</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Headlines will be populated here -->
+      </tbody>
+    </table>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
