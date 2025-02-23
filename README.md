@@ -28,7 +28,7 @@ cd server
 2. Create a database named `news_aggregator`.  
 3. Import the provided SQL dump:
    ```bash
-   psql -U postgres -d news_aggregator -f news_aggregator.sql
+   psql -U your_db_username -d news_aggregator -f news_aggregator.sql
    ```
 
 ### 3️⃣ Environment Variables
