@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors'); // Import the cors package
+const cors = require('cors');
 const db = require('./db');
 const axios = require('axios');
 const app = express();
@@ -18,16 +18,29 @@ app.post('/predict', async (req, res) => {
   }
 
   try {
-    // Call Python API for prediction
+    // Check if the headline already exists in the database
+    const checkQuery = 'SELECT * FROM headlines WHERE headline = $1';
+    const { rows: existingRows } = await db.query(checkQuery, [headline]);
+
+    if (existingRows.length > 0) {
+      // If the headline already exists, return the existing data
+      return res.json({
+        score: existingRows[0].score,
+        category: existingRows[0].category,
+        message: 'Headline already exists',
+      });
+    }
+
+    // Call Python API for prediction (if headline is new)
     const response = await axios.post('http://localhost:5000/predict', { headline });
     const { score, category } = response.data;
 
-    // Save to PostgreSQL
-    const query = 'INSERT INTO headlines (headline, score, category) VALUES ($1, $2, $3) RETURNING *';
+    // Save to PostgreSQL (only if headline is new)
+    const insertQuery = 'INSERT INTO headlines (headline, score, category) VALUES ($1, $2, $3) RETURNING *';
     const values = [headline, score, category];
-    const dbResponse = await db.query(query, values);
+    const dbResponse = await db.query(insertQuery, values);
 
-    res.json({ score, category });
+    res.json({ score, category, message: 'Headline added successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to process headline' });
@@ -46,6 +59,25 @@ app.get('/headlines', async (req, res) => {
   }
 });
 
+// Endpoint to fetch a single headline by ID
+app.get('/headlines/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = 'SELECT * FROM headlines WHERE id = $1';
+    const { rows } = await db.query(query, [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Headline not found' });
+    }
+
+    res.json(rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch headline' });
+  }
+});
+
 // Endpoint to delete a headline
 app.delete('/headlines/:id', async (req, res) => {
   const { id } = req.params;
@@ -56,6 +88,36 @@ app.delete('/headlines/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to delete headline' });
+  }
+});
+
+// Endpoint to update a headline
+app.put('/headlines/:id', async (req, res) => {
+  const { id } = req.params;
+  const { headline, score, category } = req.body;
+
+  if (!headline || !score || !category) {
+    return res.status(400).json({ error: 'Headline, score, and category are required' });
+  }
+
+  try {
+    const query = `
+      UPDATE headlines
+      SET headline = $1, score = $2, category = $3
+      WHERE id = $4
+      RETURNING *
+    `;
+    const values = [headline, score, category, id];
+    const { rows } = await db.query(query, values);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Headline not found' });
+    }
+
+    res.json({ message: 'Headline updated successfully', data: rows[0] });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update headline' });
   }
 });
 

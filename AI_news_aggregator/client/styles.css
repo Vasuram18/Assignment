@@ -1,17 +1,17 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  font-family: 'Times New Roman', Times, serif, sans-serif;
+  background-color: rgb(52, 51, 51);
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Changed from center to flex-start */
-  min-height: 100vh;       /* Changed from height to min-height */
+  align-items: flex-start;
+  min-height: 100vh;
   margin: 0;
-  overflow-y: auto;        /* Enable vertical scrolling */
+  overflow-y: auto;
+  color: white;
 }
 
-
 .container {
-  background: white;
+  background: rgb(52, 51, 51);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -59,5 +59,49 @@ th, td {
 }
 
 th {
-  background-color: #f4f4f4;
+  background-color: rgb(52, 51, 51);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 50%;
+  max-width: 500px;
+}
+
+.close {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #007bff;
+}
+
+#editHeadline, #editScore, #editCategory {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }

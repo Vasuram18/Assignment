@@ -16,7 +16,6 @@ vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(df['headline'])
 y = df['score']
 
-# Train a simple model
 model = LogisticRegression()
 model.fit(X, y)
 
