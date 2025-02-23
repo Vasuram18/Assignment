@@ -20,6 +20,7 @@ This project is an AI-powered news aggregator that classifies news headlines int
 ```bash
 git clone https://github.com/Vasuram18/Assignment.git
 cd AI_news_aggregator
+cd server
 ```
 
 ### 2️⃣ Database Setup
